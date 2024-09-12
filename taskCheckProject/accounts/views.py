@@ -11,9 +11,15 @@ def home(request):
 def join(request):
     if request.method=='POST':
         if request.POST['password'] == request.POST['repeat']:
-            new_user = User.objects.create_user(username=request.POST['username'], password=request.POST['password'])
+            first_name = request.POST['first_name']
+            new_user = User.objects.create_user(
+                username=request.POST['username'], 
+                password=request.POST['password'],
+                first_name=first_name,)
             print('회원가입 성공')
+
             return redirect('accounts:start')
+        
     return render(request, 'join.html')
 
 # 회원가입 성공
