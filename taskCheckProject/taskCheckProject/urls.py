@@ -19,5 +19,10 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # 회원가입/로그인
     path('accounts/',include('accounts.urls', namespace='accounts')),
+
+    # 팀 생성
+    path('teams/',include('teams.urls', namespace='teams')),
 ]
