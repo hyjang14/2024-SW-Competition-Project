@@ -44,16 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-<<<<<<< HEAD
-    'home',
-    'story',
-    'accounts', 'teams',
-=======
     'accounts',
     'story',
     'home',
     'teams',
->>>>>>> 32f6dfd8762e32665dbf4109c5f07dc878a20047
 ]
 
 MIDDLEWARE = [
