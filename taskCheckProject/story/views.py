@@ -30,6 +30,7 @@ def story_view(request):
 
     return render(request, 'story.html', {
         'character': character_image,
+        'upload_img' : upload_image,
         'stories': stories,
     })
 
@@ -53,9 +54,10 @@ def upload_image(request):
 
         # Update or create the test user's profile and assign a team
         user_profile, created = UserTeamProfile.objects.get_or_create(user=user)
-        user_profile.character_image = image
+        user_profile.upload_img = image
         user_profile.save()
 
+        print({"user_profile.upload_img.url"})
         return redirect('story:story_view')
     return render(request, 'upload_form.html')
 
