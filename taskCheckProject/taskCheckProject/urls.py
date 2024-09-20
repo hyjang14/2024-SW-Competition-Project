@@ -19,7 +19,13 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # 회원가입/로그인
     path('accounts/',include('accounts.urls', namespace='accounts')),
     path('story/', include('story.urls')),  # story 앱의 URL 패턴 추가
-    path('home/', include('home.urls')) # home 앱의 URL 패턴 추가
+    path('home/', include('home.urls')), # home 앱의 URL 패턴 추가
+
+
+    # 팀 생성
+    path('teams/', include('teams.urls', namespace='teams')),
 ]
