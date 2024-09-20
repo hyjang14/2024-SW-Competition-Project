@@ -1,7 +1,8 @@
 # story/models.py
 from django.db import models
 from django.contrib.auth.models import User
-# from django.contrib.auth.models import Room
+from home.models import Home
+from teams.models import Team
 
 class Story(models.Model):
     # story_id = models.PublicKey 
@@ -11,7 +12,10 @@ class Story(models.Model):
     post = models.ImageField(upload_to='story_images/')
     expire_time = models.DateTimeField()
     is_active = models.BooleanField(default=False)
-    # room_id = models.ForeignKey(Room, on_delete=models.CASCADE)
+    room_id = models.ForeignKey(Home, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    upload_image = models.ImageField(upload_to="uploads/%Y/%m/%d", blank=True, null=True)
+    character_image = models.CharField(max_length=255, default='rat.png')
 
     def __str__(self):
         return f"Story by {self.user.username}"

@@ -15,13 +15,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+<<<<<<< HEAD
 from django.urls import path, include 
+=======
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from django.views.generic import RedirectView
+>>>>>>> 32f6dfd8762e32665dbf4109c5f07dc878a20047
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     # 회원가입/로그인
     path('accounts/',include('accounts.urls', namespace='accounts')),
+<<<<<<< HEAD
     path('story/', include('story.urls')),  # story 앱의 URL 패턴 추가
     path('home/', include('home.urls')), # home 앱의 URL 패턴 추가
 
@@ -29,3 +37,12 @@ urlpatterns = [
     # 팀 생성
     path('teams/', include('teams.urls', namespace='teams')),
 ]
+=======
+    path('story/', include('story.urls', namespace='story')),  # story 앱의 URL 패턴 추가
+    path('teams/',include('teams.urls', namespace='teams')),
+
+    path('', RedirectView.as_view(url='story/', permanent=True)),
+]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+>>>>>>> 32f6dfd8762e32665dbf4109c5f07dc878a20047
