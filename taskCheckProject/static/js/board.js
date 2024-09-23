@@ -25,3 +25,26 @@ function showUploadForm(event){
 function closeForm() {
     document.getElementById('upload-form').classList.remove('active');
 }
+
+/* 게임판 부분 */
+document.addEventListener('DOMcontentLoaded', function() {
+    const gameBoard = document.getElementById('game-board');
+    const du = parseInt(gameBoard.dataset.duration, 10);
+
+    const rows = Math.ceil(du/4);
+
+    for (let i=0; i<rows; i++) {    // 행 생성
+        const row = document.createElement('div');
+        row.className = 'board-row';
+
+        for (let j=0; j<4; j++) {   // 각 행에 칸 4개 생성
+            if (i*4+j < du) {
+                const space = document.createElement('div');
+                space.className = 'space'
+                row.appendChild(space);
+            }
+        }
+
+        gameBoard.appendChild(row); //  gameBoard에 행 추가
+    }
+});

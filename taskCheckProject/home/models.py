@@ -1,20 +1,17 @@
 from django.db import models
 from django.utils import timezone
-from teams.models import UserTeamProfile
+from teams.models import UserTeamProfile, Team
 
 
 # Create your models here.
 class Home(models.Model):
-  rood_id = models.IntegerField(primary_key=True)
+  team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='homes')
   goal = models.CharField(max_length=500)
-  date = models.DateField(default=timezone.now)
+  date = models.PositiveIntegerField(default=1)
   start_date = models.DateField(default=timezone.now)
-  end_date = models.DateField(default=timezone.now)
-  image = models.CharField(max_length=150)
-  pos = models.IntegerField(null=True, blank=True)
-  is_end = models.BooleanField()
-  invitation_num = models.IntegerField()
-  user_id = models.ForeignKey(UserTeamProfile, on_delete=models.CASCADE)
+  positions = models.JSONField(default=dict)
+  is_end = models.BooleanField(default=False)
+  invitation_num = models.CharField(max_length=10, null=True, blank=True)
 
   def __str__(self):
     return self.goal

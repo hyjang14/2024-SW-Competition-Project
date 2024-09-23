@@ -22,7 +22,7 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
+    
     # 회원가입/로그인
     path('accounts/',include('accounts.urls', namespace='accounts')),
     path('story/', include('story.urls')),  # story 앱의 URL 패턴 추가

@@ -21,6 +21,7 @@
                 <h2 class="team-name">{{ team.name }}</h2>
                 <p class="team-goal">목표: {{ team.goal }}</p>
                 <p class="team-duration">기간: {{ team.duration }}일</p>
+                <p class="home-date">{{ home.date }}일차</p>
                 {% for profile in team_members_profiles %}
                     <li>
                         <!-- 팀원의 이름 표시 -->
@@ -28,7 +29,11 @@
 
                         <!-- 팀원들의 캐릭터 이미지 표시 -->
                         {% if profile.character_image %}
-                            <img src="{% static 'img/'|add:profile.character_image %}" alt="{{ profile.member.username }}의 캐릭터" width="100px">
+                            <!--<img src="{% static 'img/'|add:profile.character_image %}" alt="{{ profile.member.username }}의 캐릭터" width="100px">-->
+                            <div class="story-profile" onClick="showStory(this)" data-upload-img="{% if upload_img %}{{ upload_img }}{% endif %}">
+                                <img src="{% static 'img/'|add:profile.character_image %}" alt="character image" class="profile-img">
+                                <button class="upload-btn" onclick="showUploadForm(event)">+</button> <!-- 작은 업로드 버튼 추가 -->
+                            </div>
                         {% else %}
                             <p>캐릭터 이미지 없음</p>
                         {% endif %}
@@ -36,8 +41,20 @@
                 {% empty %}
                     <li>팀원 없음</li>
                 {% endfor %}
-
-                <!-- 팀원 목록 -->
+                <div id="upload-form" class="popup-form hidden" >
+                    <span class="close-btn" onClick="closeForm()">&times;</span>
+                    <form method="POST" enctype="multipart/form-data" action="{% url 'story:upload_image' %}">
+                        {% csrf_token %}
+                        <label for="image">이미지 업로드:</label>
+                        <input type="file" id="image" name="img" accept="image/*" required>
+                        <button type="submit">업로드</button>
+                    </form>
+                </div>
+                <div id="story-popup" class="popup" onclick="closePopUp()">
+                    <span class="close-btn">&times;</span>
+                    <img class="popup-content" id="popup-img">
+                </div>
+                <!-- 팀원 목록
                 <h3>팀원 목록</h3>
                 <ul class="team-members">
                     {% for member in team.members.all %}
@@ -45,9 +62,21 @@
                     {% empty %}
                         <li>팀원 없음</li>
                     {% endfor %}
-                </ul>
+                </ul> -->
+                <p>Rows: {{ rows }}</p>
+                <div class="game-board">
+                    {% for row in rows %}
+                        <div class="board-row">
+                            {% for j in columns %}
+                                <div class="space"></div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                </div>
             </div>
         </div>
     </div>
+    <script src="{% static 'js/team_detail.js' %}"></script>
 </body>
 </html>

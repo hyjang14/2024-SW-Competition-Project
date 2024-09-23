@@ -4,6 +4,9 @@ from .models import Invite, Team, UserTeamProfile
 from .forms import CreateTeamForm, JoinTeamForm
 import random
 import string
+from home.models import Home
+from home.views import update_home
+from django.utils import timezone
 
 
 # 초대코드 생성
@@ -30,6 +33,16 @@ def create_team(request):
                 duration=duration,
                 code=invite_code,
             )
+
+            # 홈 생성
+            Home.objects.create(
+                team=team,
+                goal=team.goal,
+                start_date=timezone.now(),
+                date=1,
+                is_end=False,
+                invitation_num=team.code
+                )
 
             Invite.objects.create(code=invite_code, team=team)
 
@@ -111,6 +124,7 @@ def choose_character(request, team_id):
 # 팀 상세페이지
 def team_detail(request, team_id):
     team = get_object_or_404(Team, id=team_id)
+    home = get_object_or_404(Home, team=team)
 
     if request.user not in team.members.all():
         messages.error(request, "이 팀에 접근할 권한이 없습니다.")
@@ -131,7 +145,10 @@ def team_detail(request, team_id):
                 'character_image': None
             })
 
+    update_home(request, team_id)
+
     return render(request, 'team_detail.html', {
         'team': team,
         'team_members_profiles': team_members_profiles,
+        'home': home
     })
