@@ -1,0 +1,60 @@
+/* 로그인 폼 스타일 */
+.content h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+/* 로고 스타일 */
+.logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box; 
+}
+
+.login-form input:focus {
+    border-color: #42658b;
+    outline: none;
+}
+
+/* 로그인 버튼 스타일 */
+.login-button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 20px;
+    background-color: #1b75bb;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+    opacity: 0.8;
+}
+
+/* 회원가입하러가기 스타일 */
+.signup-link {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.signup-link a {
+    color: #868E96;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,144 @@
+{% load static %}
+
+<!-- 홈화면 -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>체크마블</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body>
+    <div class="container">
+        <!-- 로고 이미지 -->
+        <div class="header">
+            <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo">
+        </div>
+        <div class="content">
+            <!-- 로그아웃 -->
+            {% if user.is_authenticated %} <!--로그인시-->
+                <div class="logout-link">
+                    <a href="{% url 'accounts:logout' %}">로그아웃</a><br>
+                    {{ user.first_name }}님, 안녕하세요!
+                </div>
+            {% else %}  <!--로그아웃시-->
+            {% endif %}
+                <br>
+            <h3>체크마블과 함께<br>목표를 달성해요!</h3>
+            
+            <div class="room-list">
+                <button onclick="toggleRooms('ongoing', this)" class="toggle-button" id="ongoing-btn">진행 중인 방</button>
+                <button onclick="toggleRooms('ended', this)" class="toggle-button" id="ended-btn">마감된 방</button>
+            
+                <div id="ongoing-rooms" class="room-section">
+                    {% for home in ongoing_page_obj %}
+                        <a href="{% url 'teams:team_detail' home.team.id %}" class="room-item" style="text-decoration: none;">
+                            {{ home.team.name }} ({{ home.goal }})
+                        </a>
+                    {% empty %}
+                        <div>진행 중인 방이 없습니다.</div>
+                    {% endfor %}
+            
+                    <div class="pagination">
+                        <!-- 진행 중인 방 페이지네이션 -->
+                        <div class="ongoing-pagination">
+                            {% if ongoing_page_obj.has_previous %}
+                                <a href="?ongoing_page=1" class="page-nav" title="처음"><i class="fas fa-angle-double-left"></i></a>
+                                <a href="?ongoing_page={{ ongoing_page_obj.previous_page_number }}" class="page-nav" title="이전"><i class="fas fa-angle-left"></i></a>
+                            {% else %}
+                                <span class="page-nav disabled" title="처음"><i class="fas fa-angle-double-left"></i></span>
+                                <span class="page-nav disabled" title="이전"><i class="fas fa-angle-left"></i></span>
+                            {% endif %}
+                            
+                            <span class="page-info">{{ ongoing_page_obj.number }} / {{ ongoing_page_obj.paginator.num_pages }}</span>
+                            
+                            {% if ongoing_page_obj.has_next %}
+                                <a href="?ongoing_page={{ ongoing_page_obj.next_page_number }}" class="page-nav" title="다음"><i class="fas fa-angle-right"></i></a>
+                                <a href="?ongoing_page={{ ongoing_page_obj.paginator.num_pages }}" class="page-nav" title="마지막"><i class="fas fa-angle-double-right"></i></a>
+                            {% else %}
+                                <span class="page-nav disabled" title="다음"><i class="fas fa-angle-right"></i></span>
+                                <span class="page-nav disabled" title="마지막"><i class="fas fa-angle-double-right"></i></span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            
+                <div id="ended-rooms" class="room-section" style="display:none;">
+                    {% for home in ended_page_obj %}
+                        <a href="{% url 'teams:team_detail' home.team.id %}" class="room-item" style="text-decoration: none;">
+                            {{ home.team.name }} ({{ home.goal }})
+                        </a>
+                    {% empty %}
+                        <div>마감된 방이 없습니다.</div>
+                    {% endfor %}
+            
+                    <div class="pagination">
+                        <!-- 마감된 방 페이지네이션 -->
+                        <div class="ended-pagination">
+                            {% if ended_page_obj.has_previous %}
+                                <a href="?ended_page=1" class="page-nav" title="처음"><i class="fas fa-angle-double-left"></i></a>
+                                <a href="?ended_page={{ ended_page_obj.previous_page_number }}" class="page-nav" title="이전"><i class="fas fa-angle-left"></i></a>
+                            {% else %}
+                                <span class="page-nav disabled" title="처음"><i class="fas fa-angle-double-left"></i></span>
+                                <span class="page-nav disabled" title="이전"><i class="fas fa-angle-left"></i></span>
+                            {% endif %}
+            
+                            <span class="page-info">{{ ended_page_obj.number }} / {{ ended_page_obj.paginator.num_pages }}</span>
+            
+                            {% if ended_page_obj.has_next %}
+                                <a href="?ended_page={{ ended_page_obj.next_page_number }}" class="page-nav" title="다음"><i class="fas fa-angle-right"></i></a>
+                                <a href="?ended_page={{ ended_page_obj.paginator.num_pages }}" class="page-nav" title="마지막"><i class="fas fa-angle-double-right"></i></a>
+                            {% else %}
+                                <span class="page-nav disabled" title="다음"><i class="fas fa-angle-right"></i></span>
+                                <span class="page-nav disabled" title="마지막"><i class="fas fa-angle-double-right"></i></span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+               
+            <div class="button-group">
+                <a href="{% url 'teams:join_team' %}" class="button enter-room"><b>+ 방 입장하기</b></a>
+                <a href="{% url 'teams:create_team' %}" class="button add-goal"><b>+ 목표 추가하기</b></a>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            {% if messages %}
+                {% for message in messages %}
+                    if ("{{ message.tags }}" === "error") {
+                        alert("{{ message }}");
+                    }
+                {% endfor %}
+            {% endif %}
+        });
+
+        function toggleRooms(roomType, button) {
+            const ongoingRooms = document.getElementById('ongoing-rooms');
+            const endedRooms = document.getElementById('ended-rooms');
+            const ongoingBtn = document.getElementById('ongoing-btn');
+            const endedBtn = document.getElementById('ended-btn');
+
+            if (roomType === 'ongoing') {
+                ongoingRooms.style.display = 'block';
+                endedRooms.style.display = 'none';
+                ongoingBtn.classList.add('active');
+                endedBtn.classList.remove('active');
+            } else {
+                ongoingRooms.style.display = 'none';
+                endedRooms.style.display = 'block';
+                ongoingBtn.classList.remove('active');
+                endedBtn.classList.add('active');
+            }
+        }
+
+        // 기본적으로 진행 중인 방을 보여줌
+        window.onload = function() {
+            toggleRooms('ongoing'); 
+        };
+    </script>
+</body>
+</html>
